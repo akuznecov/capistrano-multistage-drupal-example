@@ -15,4 +15,12 @@ task :siteupdate, :roles => :web do
   cache.drush
 end
 
+task :enable, :roles => :web, :except => { :no_release => true } do
+    run "#{drush_path} -r #{deploy_to}/#{current_dir} vset --yes maintenance_mode 0", :once => true
+end
+
+task :disable, :roles => :web, :except => { :no_release => true } do
+    run "#{drush_path} -r #{deploy_to}/#{current_dir} vset --yes maintenance_mode 1", :once => true
+end
+
 end
