@@ -1,5 +1,5 @@
-set :stages, ["stage", "preprod", "prod"]
-set :default_stage, "stage"
+set :stages, ["test", "preprod", "prod"]
+set :default_stage, "test"
 require 'capistrano/ext/multistage'
 
 set :application, "example"
