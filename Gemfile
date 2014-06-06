@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
 
-gem 'capistrano'
+gem 'capistrano', '<3'
 gem 'capistrano-ext'
 
