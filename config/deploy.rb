@@ -1,5 +1,8 @@
-set :stages, ["test", "preprod", "prod"]
-set :default_stage, "test"
+# avoid next names for stages: "stage", "test"
+# it could conflict with Ruby and Capistrano method names
+
+set :stages, ["develop", "preprod", "prod"]
+set :default_stage, "develop"
 require 'capistrano/ext/multistage'
 
 set :application, "example"
