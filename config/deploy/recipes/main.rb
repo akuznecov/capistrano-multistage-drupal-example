@@ -35,6 +35,25 @@ task :symlink_additional do
   end
 end
 
+task :cleanup, :except => { :no_release => true } do
+  count = fetch(:keep_releases, 5).to_i
+  local_releases = capture("ls -xt #{releases_path}").split.reverse
+  if count >= local_releases.length
+    logger.important "no old releases to clean up"
+  else
+    logger.info "keeping #{count} of #{local_releases.length} deployed releases"
+    directories = (local_releases - local_releases.last(count)).map { |release|
+    File.join(releases_path, release) }.join(" ")
+    directories.split(' ').each do | oldreleasedir |
+      tmpreleasedir = oldreleasedir.chomp
+      drupal_root = capture("find #{tmpreleasedir} -maxdepth 2 -true -type f -name install.php | xargs -I {} dirname {}").gsub(/\r\n$/, "")
+      drupal_root_processed = tmpreleasedir + drupal_root.split(tmpreleasedir).last.to_s
+      run "if [[ -d #{drupal_root_processed}/sites/ ]]; then chmod u+w #{drupal_root_processed}/sites/*; find #{drupal_root_processed}/sites/ -maxdepth 2 -type f -name settings.php -print0 | xargs -I{} -0 chmod u+w {}; fi"
+    end
+    run "rm -rf #{directories}"
+  end
+end
+
 task :restart do
   # stub
 end
